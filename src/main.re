@@ -1,0 +1,1 @@
+type point = (float, float);
