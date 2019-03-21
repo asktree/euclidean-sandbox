@@ -16,4 +16,8 @@ let append_ghost: primitive => ghostWorld => ghostWorld;
 
 let check_duplicates: ghost => ghostWorld => bool;
 
-let nearest_point: point => ghost => (point, float);
+let nearest_point_on_ghost: point => ghost => (float, point);
+
+let nearest_ghost: point => ghostWorld => (float, point, ghost);
+
+let snap_cursor: point => ghostWorld => point;
