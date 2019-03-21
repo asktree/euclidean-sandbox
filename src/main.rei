@@ -4,8 +4,8 @@ type svg = string;
 type line = (point, point);
 type circle = (point, float);
 
-type primitive = line | circle | point;
-type ghost = Ghost primitive;
+type primitive = Line(line) | Circle(circle) | Point(point);
+type ghost = Ghost(primitive);
 type ghostWorld = list(ghost);
 
 let draw: ghost => svg;
