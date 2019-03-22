@@ -139,7 +139,9 @@ let find_intersections = (pr1, pr2) => {
 let nearest_point_on_circle = (pt: point, c: circle) => {
     let vec = pt -^ fst(c);
     let vec = snd(c) *^ vec /^ magnitude(vec);
-    vec +^ fst(c)
+    let cpt = vec +^ fst(c);
+    let dst = magnitude(pt -^ cpt);
+    (dst, cpt);
 };
 
 let nearest_point_on_line = (pt: point, l: line) => {
@@ -147,14 +149,14 @@ let nearest_point_on_line = (pt: point, l: line) => {
     let vec = vec /^ magnitude(vec);
     let dst = dot(vec, pt);
 
-    (dst *^ vec) +^ fst(l);
+    (dst, (dst *^ vec) +^ fst(l));
 };
 
 let nearest_point_on_primitive = (pt, pr) =>
     switch pr {
     | Circle(c) => nearest_point_on_circle(pt, c)
     | Line(l) => nearest_point_on_line(pt, l)
-    | Point(p) => (distance(pt, p), p)
+    | Point(p) => (magnitude(pt -^ p), p)
     };
 
 let rec nearest_ghost = (~best = ?, pt : point, w : ghostWorld) =>
