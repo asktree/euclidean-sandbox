@@ -2,7 +2,7 @@
 'use strict';
 
 var Block = require("bs-platform/lib/js/block.js");
-var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
+var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
 
 function sqr(a) {
   return a * a;
@@ -55,11 +55,12 @@ function project(v, onto) {
   return $star$caret(dot(v, onto) / dot(onto, onto), onto);
 }
 
-var Not_implemented = Caml_exceptions.create("Euclidean-ReactTemplate.Not_implemented");
-
-function is_identical(pr1, pr2) {
-  throw Not_implemented;
+function distance(p1, p2) {
+  var a = $neg$caret(p1, p2);
+  return Math.sqrt(dot(a, a));
 }
+
+var is_identical = Caml_obj.caml_equal;
 
 function circle_circle_intersections(c1, c2) {
   var r2 = c2[1];
@@ -192,7 +193,16 @@ function find_intersections(pr1, pr2) {
           case 1 : 
               return circle_point_intersections(pr2[0], p1);
           case 2 : 
-              return is_identical(/* Point */Block.__(2, [p1]), /* Point */Block.__(2, [pr2[0]]));
+              var p2 = pr2[0];
+              var match = Caml_obj.caml_equal(/* Point */Block.__(2, [p1]), /* Point */Block.__(2, [p2]));
+              if (match) {
+                return /* :: */[
+                        p2,
+                        /* [] */0
+                      ];
+              } else {
+                return /* [] */0;
+              }
           
         }
     
@@ -251,6 +261,7 @@ exports.$star$caret = $star$caret;
 exports.$slash$caret = $slash$caret;
 exports.project = project;
 exports.is_identical = is_identical;
+exports.distance = distance;
 exports.circle_circle_intersections = circle_circle_intersections;
 exports.circle_line_intersections = circle_line_intersections;
 exports.circle_point_intersections = circle_point_intersections;

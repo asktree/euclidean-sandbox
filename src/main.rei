@@ -7,7 +7,7 @@ type ghostWorld = list(ghost);
 
 let append_ghost: primitive => ghostWorld => ghostWorld;
 
-let check_duplicates: ghost => ghostWorld => bool;
+let check_duplicate: ghost => ghostWorld => bool;
 
 let nearest_ghost: point => ghostWorld => (float, point, ghost);
 

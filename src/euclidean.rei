@@ -11,6 +11,7 @@ let ( *^ ): (float, point) => point;
 let ( /^ ): (point, float) => point;
 let project: (point, point) => point;
 let is_identical: (primitive, primitive) => bool;
+let distance: (point, point) => float;
 
 let circle_circle_intersections: (circle, circle) => list(point);
 let circle_line_intersections: (circle, line) => list(point);

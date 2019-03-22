@@ -7,10 +7,18 @@ type svg = string;
 type ghost = Ghost(primitive);
 type ghostWorld = list(ghost);
 
-exception Not_implemented;
+let rec check_duplicate = (g, w) => {
+    switch (w) {
+    | [] => false
+    | [h, ...k] =>
+        switch (Euclidean.is_identical(g, h)) {
+        | true => true
+        | false => check_duplicate(g, k)
+        };
+    };
+};
 
-
-let rec append_ghost = (g, w) => {
+let append_ghost = (g, w) => {
     [g, ...w]
 };
 

@@ -5,18 +5,16 @@ let epsilon = 0.01;
 
 
 let sqr = (a: float) => a *. a;
-let (dot) = (a: point, b: point) => (fst(a) *. fst(b)) +. (snd(a) *. snd(b));
-let (magnitude) = (a: point) => sqrt(dot(a, a));
-let (perpify) = (a: point) => (-.fst(a), snd(a)); 
+let dot = (a: point, b: point) => (fst(a) *. fst(b)) +. (snd(a) *. snd(b));
+let magnitude = (a: point) => sqrt(dot(a, a));
+let perpify = (a: point) => (-.fst(a), snd(a)); 
 let (+^) = (a: point, b: point) => (fst(a) +. fst(b), snd(a) +. snd(b));
 let (-^) = (a: point, b: point) => (fst(a) -. fst(b), snd(a) -. snd(b));
 let (*^) = (a: float, b: point) => (a *. fst(b), a *. snd(b));
 let (/^) = (b: point, a: float) => (fst(b) /. a, snd(b) /. a)
-let (project) = (v: point, onto: point) => (dot(v, onto) /. dot(onto, onto)) *^ onto;
+let project = (v: point, onto: point) => (dot(v, onto) /. dot(onto, onto)) *^ onto;
 
-
-
-exception Not_implemented;
+let distance = (p1, p2) => magnitude(p1 -^ p2);
 
 let is_identical = (pr1 : primitive, pr2 : primitive) => pr1 == pr2;
 /* TODO: add epsilon tolerance */
@@ -127,8 +125,12 @@ let find_intersections = (pr1, pr2) => {
         switch pr2 {
         | Circle(c2) => circle_point_intersections(c2, p1)
         | Line(l2) => line_point_intersections(l2, p1)
-        | Point(p2) => is_identical(Point(p1), Point(p2))
-        }
+        | Point(p2) => 
+            switch (is_identical(Point(p1), Point(p2))) {
+            | true => [p2]
+            | false => []
+            };
+        };
     };
 };
 
