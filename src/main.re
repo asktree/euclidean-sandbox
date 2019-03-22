@@ -154,19 +154,19 @@ let nearest_point_on_primitive = (pt, pr) =>
     | Circle(c) => ()
     | Line(l) => ()
     | Point(p) => (distance(pt, p), p)
-    }
+    };
 
 let rec nearest_ghost = (~best = ?, pt : point, w : ghostWorld) =>
     switch w {
     | [] => best
     | [g, ...remaining] => 
-        let Ghost(pr) = g in 
-        let (d1, x1) = nearest_point_on_primitive(pt, pr) in
-        let candidate = (d1, x1, g) in
+        let Ghost(pr) = g;
+        let (d1, x1) = nearest_point_on_primitive(pt, pr);
+        let candidate = (d1, x1, g);
         switch best {
         | None => nearest_ghost(~best = candidate, pt, remaining)
-        | Some incumbent => 
-            let winner = max(candidate, incumbent) in
+        | Some(incumbent) => 
+            let winner = max(candidate, incumbent);
             nearest_ghost(~best = winner, pt, remaining)
-        } 
-    }
+        };
+    };
