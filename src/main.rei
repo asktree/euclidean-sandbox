@@ -1,6 +1,5 @@
-type point = (float, float);
 type svg = string;
-
+type point = (float, float);
 type line = (point, point);
 type circle = (point, float);
 
