@@ -1,5 +1,5 @@
-let EPSILON = 0.01;
-let SQRT_EPSILON = sqrt(EPSILON);
+let epsilon = 0.01;
+let epsilon_sqrt = sqrt(epsilon);
 
 let sqr = (a) => a * a;
 
