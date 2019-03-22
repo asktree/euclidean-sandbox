@@ -1,5 +1,5 @@
 let epsilon = 0.01;
-let epsilon_sqrt = sqrt(epsilon);
+let eps_sqrt = sqrt(epsilon);
 
 let sqr = (a) => a * a;
 
@@ -141,7 +141,7 @@ let line_point_intersections = (l : line, p: point) => {
     } 
 };
 
-let find_intersections = (pr1, pr2) => 
+let find_intersections = (pr1, pr2) => {
     switch pr1 {
     | Circle(c1) => 
         switch pr2 {
@@ -162,6 +162,7 @@ let find_intersections = (pr1, pr2) =>
         | Point(p2) => is_identical(Point(p1), Point(p2))
         }
     };
+};
 
 let nearest_point_on_circle = (pt: point, c: circle) => {
     let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
@@ -191,8 +192,8 @@ let nearest_point_on_line = (pt: point, l: line) => {
 
 let nearest_point_on_primitive = (pt, pr) =>
     switch pr {
-    | Circle(c) => ()
-    | Line(l) => ()
+    | Circle(c) => nearest_point_on_circle(pt, c)
+    | Line(l) => nearest_point_on_line(pt, l)
     | Point(p) => (distance(pt, p), p)
     };
 
