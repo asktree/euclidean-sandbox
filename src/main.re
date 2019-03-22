@@ -1,9 +1,17 @@
-let EPSILON = 0.01;
-let SQRT_EPSILON = sqrt(EPSILON);
-
-let sqr = (a) => a * a;
+let epsilon = 0.01;
 
 type point = (float, float);
+
+let sqr = (a: float) => a *. a;
+let (dot) = (a: point, b: point) => (fst(a) *. fst(b)) +. (snd(a) *. snd(b));
+let (magnitude) = (a: point) => sqrt(dot(a, a));
+let (perpify) = (a: point) => (-.fst(a), snd(a)); 
+let (+^) = (a: point, b: point) => (fst(a) +. fst(b), snd(a) +. snd(b));
+let (-^) = (a: point, b: point) => (fst(a) -. fst(b), snd(a) -. snd(b));
+let (*^) = (a: float, b: point) => (a *. fst(b), a *. snd(b));
+let (/^) = (b: point, a: float) => (fst(b) /. a, snd(b) /. a)
+let (project) = (v: point, onto: point) => (dot(v, onto) /. dot(onto, onto)) *^ onto;
+
 type svg = string;
 
 type line = (point, point);
@@ -21,66 +29,45 @@ let circle_circle_intersections = (c1 : circle, c2 : circle) => {
     let (center1, r1) = c1;
     let (center2, r2) = c2;
 
-    let centerDistance = {
-        let dot = (a, b) => fst(a) * fst(b) + snd(a) + snd(b);
-        let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-        sqrt(dot(center2 - center1, center2 - center1))
-    };
+    let centerDistance = magnitude(center2 -^ center1);
 
-    if (centerDistance > r1 + r2) {
+    if (centerDistance > r1 +. r2) {
         []
-    } else if (centerDistance == r1 + r2) {
-        let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
-        let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-        let (*) = (a, b) => (a * fst(b), a * snd(b));
-        let (/) = (a, b) => (fst(b) / a, snd(b) / a); 
-
-        [(r1 * (center2 - center1) / centerDistance) + center1]
+    } else if (centerDistance == r1 +. r2) {
+        [((r1 *^ (center2 -^ center1)) /^ centerDistance) +^ center1]
     } else {
-        let para = (sqr(centerDistance) - sqr(r2) + sqr(r1))/(2 * centerDistance);
+        let para = (sqr(centerDistance) -. sqr(r2) +. sqr(r1))/.(2.0 *. centerDistance);
         let perp = sqrt(
-            (-centerDistance + r2 - r1) * 
-            (-centerDistance - r2 + r1) *
-            (-centerDistance + r2 + r1) *
-            (centerDistance + r2 + r1)
-            )/centerDistance;
+            (-.centerDistance +. r2 -. r1) *. 
+            (-.centerDistance -. r2 +. r1) *.
+            (-.centerDistance +. r2 +. r1) *.
+            (centerDistance +. r2 +. r1)
+            )/.centerDistance;
 
-        let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
-        let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-        let (*) = (a, b) => (a * fst(b), a * snd(b));
-        let (/) = (a, b) => (fst(b) / a, snd(b) / a); 
+        let paraVec = (center2 -^ center1) /^ centerDistance;
+        let perpVec = perpify(paraVec);
 
-        let paraVec = (center2 - center1) / centerDistance;
-        let perpVec = (-fst(paraVec), snd(paraVec));
-
-        [para * paraVec + perp * perpVec + center1, para * paraVec - perp * perpVec + center1]
+        [para *^ paraVec +^ perp *^ perpVec +^ center1, para *^ paraVec -^ perp *^ perpVec +^ center1]
     }
 };
 
 let circle_line_intersections = (c : circle, l : line) => {
     let (center, radius) = c;
-    let center = center - fst(l);
-    let s = snd(l) - fst(l);
+    let center = center -^ fst(l);
+    let s = snd(l) -^ fst(l);
 
-    let dot = (a, b) => fst(a) * fst(b) + snd(a) + snd(b);
-    let magnitude = (x) => sqrt(dot(x, x)); 
-
-    let paraVec = {
-        let (*) = (a, b) => (a * fst(b), a * snd(b));
-
-        ((dot(center, s) / dot(s, s)) * s) - center
-    };
+    let paraVec = project(center, s) -^ center;
 
     let para = magnitude(paraVec);
 
-    if (sqr(r) > sqr(para)) {
-        let perp = sqrt(sqr(r) - sqr(para));
+    if (sqr(radius) > sqr(para)) {
+        let perp = sqrt(sqr(radius) -. sqr(para));
 
-        let perpVec = (-fst(paraVec), snd(paraVec));
+        let perpVec = perpify(paraVec);
 
-        [paraVec + perp * perpVec + fst(l), paraVec - perp * perpVec + fst(l)]
-    } else if (sqr(r) == sqr(para)) {
-        [paraVec + fst(l)]
+        [paraVec +^ perp *^ perpVec +^ fst(l), paraVec -^ perp *^ perpVec +^ fst(l)]
+    } else if (sqr(radius) == sqr(para)) {
+        [paraVec +^ fst(l)]
     } else {
         []
     }
@@ -88,13 +75,9 @@ let circle_line_intersections = (c : circle, l : line) => {
 
 let circle_point_intersections = (c : circle, p : point) => {
     let (center, radius) = c;
-    let dot = (a, b) => fst(a) * fst(b) + snd(a) + snd(b);
-    let diff = {
-        let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-        p - center
-    };
+    let diff = p -^ center;
     
-    if (abs(sqrt(dot(diff, diff)) - radius) > EPSILON) {
+    if (sqr(magnitude(diff) -. radius) > sqr(epsilon)) {
         []
     } else {
         [p]
@@ -103,41 +86,30 @@ let circle_point_intersections = (c : circle, p : point) => {
 
 let line_line_intersections = (l1 : line, l2 : line) => {
     let (dv, dx) = {
-        let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-        let vx = snd(l1) - fst(l1);
-        let vy = snd(l2) - fst(l2);
+        let vx = snd(l1) -^ fst(l1);
+        let vy = snd(l2) -^ fst(l2);
 
-        (vy - vx, fst(l1) - fst(l2))
+        (vy -^ vx, fst(l1) -^ fst(l2))
     };
 
-    let factor = fst(dx) / fst(dv);
+    let factor = fst(dx) /. fst(dv);
 
-    if (factor * snd(dv) - snd(dx) > EPSILON) {
+    if (factor *. snd(dv) -. snd(dx) > epsilon) {
         []
     } else {
-        let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
-        let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-        let (*) = (a, b) => (a * fst(b), a * snd(b));
-
-        [fst(l1) + factor * (snd(l1) - fst(l1))]
+        [fst(l1) +^ factor *^ (snd(l1) -^ fst(l1))]
     }
 };
 
 let line_point_intersections = (l : line, p: point) => {
-    let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
-    let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-    let (*) = (a, b) => (a * fst(b), a * snd(b));
-    let (/) = (a, b) => (fst(b) / a, snd(b) / a);
-    let dot = (a, b) => fst(a) * fst(b) + snd(a) + snd(b);
+    let v = snd(l) -^ fst(l);
+    let p = p -^ fst(l);
+    let proj = project(v, p);
 
-    let v = snd(l) - fst(l);
-    let p = p - fst(l);
-    let proj = (dot(v, p)/dot(p, p)) * p;
-
-    if (dot(v - proj, v - proj) > SQRT_EPSILON) {
+    if (magnitude(v -^ proj) > epsilon) {
         []
     } else {
-        [p + fst(l)]
+        [p +^ fst(l)]
     } 
 };
 
@@ -164,29 +136,17 @@ let find_intersections = (pr1, pr2) =>
     };
 
 let nearest_point_on_circle = (pt: point, c: circle) => {
-    let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
-    let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-    let (*) = (a, b) => (a * fst(b), a * snd(b));
-    let (/) = (a, b) => (fst(b) / a, snd(b) / a);
-    let dot = (a, b) => fst(a) * fst(b) + snd(a) + snd(b);
-
-    let vec = pt - fst(c);
-    let vec = snd(c) * vec / sqrt(dot(vec, vec));
-    return vec + fst(c);
+    let vec = pt -^ fst(c);
+    let vec = snd(c) *^ vec /^ magnitude(vec);
+    vec +^ fst(c)
 };
 
 let nearest_point_on_line = (pt: point, l: line) => {
-    let (+) = (a, b) => (fst(a) + fst(b), snd(a) + snd(b));
-    let (-) = (a, b) => (fst(a) - fst(b), snd(a) - snd(b));
-    let (*) = (a, b) => (a * fst(b), a * snd(b));
-    let (/) = (a, b) => (fst(b) / a, snd(b) / a);
-    let dot = (a, b) => fst(a) * fst(b) + snd(a) + snd(b);
-
-    let vec = snd(line) - fst(line);
-    let vec = vec / sqrt(dot(vec, vec));
+    let vec = snd(l) -^ fst(l);
+    let vec = vec /^ magnitude(vec);
     let dst = dot(vec, pt);
 
-    return (dst * vec) + fst(line); 
+    (dst *^ vec) +^ fst(l);
 };
 
 let nearest_point_on_primitive = (pt, pr) =>
