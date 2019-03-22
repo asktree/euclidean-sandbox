@@ -1,15 +1,12 @@
-type svg = string;
-type point = (float, float);
-type line = (point, point);
-type circle = (point, float);
+open Primitives;
 
-type primitive = Line(line) | Circle(circle) | Point(point);
+type svg = string;
 type ghost = Ghost(primitive);
 type ghostWorld = list(ghost);
 
 let draw: ghost => svg;
 
-let find_intersections: primitive => primitive => list(point);
+
 
 let append_ghost: primitive => ghostWorld => ghostWorld;
 
