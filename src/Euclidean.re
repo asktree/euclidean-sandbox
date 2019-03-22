@@ -18,7 +18,8 @@ let (project) = (v: point, onto: point) => (dot(v, onto) /. dot(onto, onto)) *^ 
 
 exception Not_implemented;
 
-let is_identical = (pr1 : primitive, pr2 : primitive) => raise(Not_implemented);
+let is_identical = (pr1 : primitive, pr2 : primitive) => pr1 == pr2;
+/* TODO: add epsilon tolerance */
 
 let circle_circle_intersections = (c1 : circle, c2 : circle) => {
     let (center1, r1) = c1;

@@ -9,9 +9,10 @@ type ghostWorld = list(ghost);
 
 exception Not_implemented;
 
-let is_identical = (pr1 : primitive, pr2 : primitive) => raise(Not_implemented);
 
-
+let rec append_ghost = (g, w) => {
+    [g, ...w]
+};
 
 let rec nearest_ghost = (~best = ?, pt : point, w : ghostWorld) =>
     switch w {
