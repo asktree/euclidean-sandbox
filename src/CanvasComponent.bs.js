@@ -155,8 +155,8 @@ function make(_children) {
                             }, React.createElement("circle", {
                                   cx: self[/* state */1][/* tool_pos */4][0].toString(),
                                   cy: self[/* state */1][/* tool_pos */4][1].toString(),
-                                  fill: "red",
-                                  r: "3",
+                                  fill: "none",
+                                  r: "10",
                                   stroke: "red"
                                 }), draw_world(undefined, self[/* state */1][/* ghosts */0])));
             }),

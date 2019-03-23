@@ -134,7 +134,7 @@ let make = (_children) => {
                     <circle 
                         cx={Js.Float.toString(fst(self.state.tool_pos))}
                         cy={Js.Float.toString(snd(self.state.tool_pos))}
-                        r="3" fill="red" stroke="red"
+                        r="10" fill="none" stroke="red"
                     />
                     {draw_world(self.state.ghosts)}
                 </svg>
