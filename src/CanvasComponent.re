@@ -114,7 +114,7 @@ let make = (_children) => {
         },
         
         render: self => {
-            <div>
+            <div id="canvas">
                 <div style=(ReactDOMRe.Style.make(~position="absolute", 
                                                  ~top="10px",
                                                  ~left="10px", ()))>
@@ -128,7 +128,7 @@ let make = (_children) => {
                         {ReasonReact.string(" POINMT ")}
                     </div>
                 </div>
-                <svg width="1000" height="1000" 
+                <svg
                  onClick=(_event => self.send(ClickCanvas))
                  onMouseMove={self.handle(canvas_mousemove)}>
                     <circle 

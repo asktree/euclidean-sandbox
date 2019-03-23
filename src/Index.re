@@ -1,2 +1,2 @@
 
-ReactDOMRe.renderToElementWithId(<CanvasComponent />, "index1");
+ReactDOMRe.renderToElementWithId(<CanvasComponent />, "page");

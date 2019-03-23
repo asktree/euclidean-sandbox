@@ -5,6 +5,6 @@ var ReactDOMRe = require("reason-react/src/ReactDOMRe.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 var CanvasComponent$ReactTemplate = require("./CanvasComponent.bs.js");
 
-ReactDOMRe.renderToElementWithId(ReasonReact.element(undefined, undefined, CanvasComponent$ReactTemplate.make(/* array */[])), "index1");
+ReactDOMRe.renderToElementWithId(ReasonReact.element(undefined, undefined, CanvasComponent$ReactTemplate.make(/* array */[])), "page");
 
 /*  Not a pure module */
