@@ -60,8 +60,6 @@ let component = ReasonReact.reducerComponent("Canvas");
 
 let make = (_children) => {
     let canvas_mousemove = (e, self) => {
-        let dim = [%bs.raw {| 'e.getBoundingClientRect();' |}]
-        Js.Console.log(dim);
         let pt = (ReactEvent.Mouse.clientX(e), ReactEvent.Mouse.clientY(e));
         self.ReasonReact.send(MouseMove(pt));
         ()
@@ -115,9 +113,22 @@ let make = (_children) => {
                 ReasonReact.Update({...state, tool_pos: pt'})
             }
         },
-
+        
         render: self => {
             <div>
+                <div style=(ReactDOMRe.Style.make(~position="absolute", 
+                                                 ~top="10px",
+                                                 ~left="10px", ()))>
+                    <div  onClick=(_event => self.send(ToolSelect(CircleTool)))>
+                        {ReasonReact.string(" CIRCLE ")}
+                    </div>
+                    <div  onClick=(_event => self.send(ToolSelect(LineTool)))>
+                        {ReasonReact.string(" LINE!! ")}
+                    </div>                    
+                    <div  onClick=(_event => self.send(ToolSelect(PointTool)))>
+                        {ReasonReact.string(" POINMT ")}
+                    </div>
+                </div>
                 <svg width="1000" height="1000" 
                  onClick=(_event => self.send(ClickCanvas))
                  onMouseMove={self.handle(canvas_mousemove)}>

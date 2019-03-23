@@ -107,8 +107,6 @@ var component = ReasonReact.reducerComponent("Canvas");
 
 function make(_children) {
   var canvas_mousemove = function (e, self) {
-    var dim = ( 'e.getBoundingClientRect();' );
-    console.log(dim);
     var pt_000 = e.clientX;
     var pt_001 = e.clientY;
     var pt = /* tuple */[
@@ -129,7 +127,25 @@ function make(_children) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (self) {
-              return React.createElement("div", undefined, React.createElement("svg", {
+              return React.createElement("div", undefined, React.createElement("div", {
+                              style: {
+                                left: "10px",
+                                position: "absolute",
+                                top: "10px"
+                              }
+                            }, React.createElement("div", {
+                                  onClick: (function (_event) {
+                                      return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* CircleTool */0]));
+                                    })
+                                }, " CIRCLE "), React.createElement("div", {
+                                  onClick: (function (_event) {
+                                      return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* LineTool */1]));
+                                    })
+                                }, " LINE!! "), React.createElement("div", {
+                                  onClick: (function (_event) {
+                                      return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* PointTool */2]));
+                                    })
+                                }, " POINMT ")), React.createElement("svg", {
                               height: "1000",
                               width: "1000",
                               onClick: (function (_event) {
