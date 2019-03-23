@@ -114,8 +114,9 @@ let make = (_children) => {
         },
         
         render: self => {
-            <div>
-                <div style=(ReactDOMRe.Style.make(~position="absolute", 
+            <div id="canvas">
+                <div id="tools"
+                    style=(ReactDOMRe.Style.make(~position="absolute", 
                                                  ~top="10px",
                                                  ~left="10px", ()))>
                     <div  onClick=(_event => self.send(ToolSelect(CircleTool)))>
@@ -128,13 +129,13 @@ let make = (_children) => {
                         {ReasonReact.string(" POINMT ")}
                     </div>
                 </div>
-                <svg width="1000" height="1000" 
+                <svg
                  onClick=(_event => self.send(ClickCanvas))
                  onMouseMove={self.handle(canvas_mousemove)}>
                     <circle 
                         cx={Js.Float.toString(fst(self.state.tool_pos))}
                         cy={Js.Float.toString(snd(self.state.tool_pos))}
-                        r="3" fill="red" stroke="red"
+                        r="10" fill="none" stroke="red"
                     />
                     {draw_world(self.state.ghosts)}
                 </svg>

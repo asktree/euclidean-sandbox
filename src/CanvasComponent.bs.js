@@ -127,7 +127,10 @@ function make(_children) {
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (self) {
-              return React.createElement("div", undefined, React.createElement("div", {
+              return React.createElement("div", {
+                          id: "canvas"
+                        }, React.createElement("div", {
+                              id: "tools",
                               style: {
                                 left: "10px",
                                 position: "absolute",
@@ -146,8 +149,6 @@ function make(_children) {
                                       return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* PointTool */2]));
                                     })
                                 }, " POINMT ")), React.createElement("svg", {
-                              height: "1000",
-                              width: "1000",
                               onClick: (function (_event) {
                                   return Curry._1(self[/* send */3], /* ClickCanvas */0);
                                 }),
@@ -155,8 +156,8 @@ function make(_children) {
                             }, React.createElement("circle", {
                                   cx: self[/* state */1][/* tool_pos */4][0].toString(),
                                   cy: self[/* state */1][/* tool_pos */4][1].toString(),
-                                  fill: "red",
-                                  r: "3",
+                                  fill: "none",
+                                  r: "10",
                                   stroke: "red"
                                 }), draw_world(undefined, self[/* state */1][/* ghosts */0])));
             }),
