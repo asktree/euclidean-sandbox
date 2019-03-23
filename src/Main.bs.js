@@ -203,7 +203,7 @@ function find_nearest_point(_nearest, pt, _pts) {
         pt2
       ];
       if (nearest !== undefined) {
-        var nearest$prime = Caml_obj.caml_max(candidate, nearest);
+        var nearest$prime = Caml_obj.caml_min(candidate, nearest);
         _pts = k;
         _nearest = nearest$prime;
         continue ;

@@ -33,7 +33,7 @@ let rec nearest_ghost = (~best = ?, pt : point, w : ghostWorld) =>
         switch best {
         | None => nearest_ghost(~best = candidate, pt, remaining)
         | Some(incumbent) => 
-            let winner = max(candidate, incumbent);
+            let winner = min(candidate, incumbent);
             nearest_ghost(~best = winner, pt, remaining)
         };
     };
@@ -129,7 +129,7 @@ let rec find_nearest_point = (~nearest=?, pt:point, pts:list(point)) => {
         | None => 
             find_nearest_point(~nearest=candidate, pt, k)
         | Some(incumbent) =>
-            let nearest' = max(candidate, incumbent);
+            let nearest' = min(candidate, incumbent);
             find_nearest_point(~nearest=nearest', pt, k)
         };
     };

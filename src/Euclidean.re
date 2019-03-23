@@ -144,10 +144,12 @@ let nearest_point_on_circle = (pt: point, c: circle) => {
 
 let nearest_point_on_line = (pt: point, l: line) => {
     let vec = snd(l) -^ fst(l);
-    let vec = vec /^ magnitude(vec);
-    let dst = dot(vec, pt);
+    let pvec = pt -^ fst(l);
+    let proj = ((dot(pvec, vec) /. dot(vec, vec)) *^ vec);
+    let npt = proj +^ fst(l);
+    let dst = magnitude(pt -^ npt);
 
-    (dst, (dst *^ vec) +^ fst(l));
+    (dst, npt);
 };
 
 let nearest_point_on_primitive = (pt, pr) =>

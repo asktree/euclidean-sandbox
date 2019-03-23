@@ -223,11 +223,14 @@ function nearest_point_on_circle(pt, c) {
 
 function nearest_point_on_line(pt, l) {
   var vec = $neg$caret(l[1], l[0]);
-  var vec$1 = $slash$caret(vec, Math.sqrt(dot(vec, vec)));
-  var dst = dot(vec$1, pt);
+  var pvec = $neg$caret(pt, l[0]);
+  var proj = $star$caret(dot(pvec, vec) / dot(vec, vec), vec);
+  var npt = $plus$caret(proj, l[0]);
+  var a = $neg$caret(pt, npt);
+  var dst = Math.sqrt(dot(a, a));
   return /* tuple */[
           dst,
-          $plus$caret($star$caret(dst, vec$1), l[0])
+          npt
         ];
 }
 

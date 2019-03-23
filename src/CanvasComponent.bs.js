@@ -176,14 +176,13 @@ function make(_children) {
           /* reducer */(function (action, state) {
               if (typeof action === "number") {
                 var pt = state[/* tool_pos */4];
-                var pt$prime = Main$ReactTemplate.snap_cursor(pt, 20, state[/* ghosts */0]);
                 var match = state[/* selected_tool */1];
                 switch (match) {
                   case 0 : 
                       var match$1 = state[/* tool_firstclick */2];
                       if (match$1 !== undefined) {
                         var pt2 = match$1;
-                        var r = Euclidean$ReactTemplate.distance(pt$prime, pt2);
+                        var r = Euclidean$ReactTemplate.distance(pt, pt2);
                         var new_ghost = /* Ghost */[/* Circle */Block.__(1, [/* tuple */[
                                 pt2,
                                 r
@@ -200,7 +199,7 @@ function make(_children) {
                         return /* Update */Block.__(0, [/* record */[
                                     /* ghosts */state[/* ghosts */0],
                                     /* selected_tool */state[/* selected_tool */1],
-                                    /* tool_firstclick */pt$prime,
+                                    /* tool_firstclick */pt,
                                     /* hovered_ghost */state[/* hovered_ghost */3],
                                     /* tool_pos */state[/* tool_pos */4]
                                   ]]);
@@ -210,7 +209,7 @@ function make(_children) {
                       if (match$2 !== undefined) {
                         var new_ghost$1 = /* Ghost */[/* Line */Block.__(0, [/* tuple */[
                                 match$2,
-                                pt$prime
+                                pt
                               ]])];
                         var new_ghosts$1 = Main$ReactTemplate.append_ghost(new_ghost$1, state[/* ghosts */0]);
                         return /* Update */Block.__(0, [/* record */[
@@ -224,13 +223,13 @@ function make(_children) {
                         return /* Update */Block.__(0, [/* record */[
                                     /* ghosts */state[/* ghosts */0],
                                     /* selected_tool */state[/* selected_tool */1],
-                                    /* tool_firstclick */pt$prime,
+                                    /* tool_firstclick */pt,
                                     /* hovered_ghost */state[/* hovered_ghost */3],
                                     /* tool_pos */state[/* tool_pos */4]
                                   ]]);
                       }
                   case 2 : 
-                      var new_ghost$2 = /* Ghost */[/* Point */Block.__(2, [pt$prime])];
+                      var new_ghost$2 = /* Ghost */[/* Point */Block.__(2, [pt])];
                       var new_ghosts$2 = Main$ReactTemplate.append_ghost(new_ghost$2, state[/* ghosts */0]);
                       return /* Update */Block.__(0, [/* record */[
                                   /* ghosts */new_ghosts$2,
@@ -249,13 +248,13 @@ function make(_children) {
                   pt_000,
                   pt_001
                 ];
-                var pt$prime$1 = Main$ReactTemplate.snap_cursor(pt$1, 10, state[/* ghosts */0]);
+                var pt$prime = Main$ReactTemplate.snap_cursor(pt$1, 10, state[/* ghosts */0]);
                 return /* Update */Block.__(0, [/* record */[
                             /* ghosts */state[/* ghosts */0],
                             /* selected_tool */state[/* selected_tool */1],
                             /* tool_firstclick */state[/* tool_firstclick */2],
                             /* hovered_ghost */state[/* hovered_ghost */3],
-                            /* tool_pos */pt$prime$1
+                            /* tool_pos */pt$prime
                           ]]);
               } else {
                 return /* Update */Block.__(0, [/* record */[
