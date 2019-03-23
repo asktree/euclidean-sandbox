@@ -115,7 +115,8 @@ let make = (_children) => {
         
         render: self => {
             <div id="canvas">
-                <div style=(ReactDOMRe.Style.make(~position="absolute", 
+                <div id="tools"
+                    style=(ReactDOMRe.Style.make(~position="absolute", 
                                                  ~top="10px",
                                                  ~left="10px", ()))>
                     <div  onClick=(_event => self.send(ToolSelect(CircleTool)))>

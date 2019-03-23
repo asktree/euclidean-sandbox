@@ -130,6 +130,7 @@ function make(_children) {
               return React.createElement("div", {
                           id: "canvas"
                         }, React.createElement("div", {
+                              id: "tools",
                               style: {
                                 left: "10px",
                                 position: "absolute",
