@@ -16,7 +16,7 @@ let project = (v: point, onto: point) => (dot(v, onto) /. dot(onto, onto)) *^ on
 
 let distance = (p1, p2) => magnitude(p1 -^ p2);
 
-let is_identical = (pr1 : primitive, pr2 : primitive) => pr1 == pr2;
+let epsilon_identical = (pr1 : primitive, pr2 : primitive) => pr1 == pr2;
 /* TODO: add epsilon tolerance */
 
 let circle_circle_intersections = (c1 : circle, c2 : circle) => {
@@ -126,7 +126,7 @@ let find_intersections = (pr1, pr2) => {
         | Circle(c2) => circle_point_intersections(c2, p1)
         | Line(l2) => line_point_intersections(l2, p1)
         | Point(p2) => 
-            switch (is_identical(Point(p1), Point(p2))) {
+            switch (epsilon_identical(Point(p1), Point(p2))) {
             | true => [p2]
             | false => []
             };

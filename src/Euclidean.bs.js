@@ -60,7 +60,7 @@ function distance(p1, p2) {
   return Math.sqrt(dot(a, a));
 }
 
-var is_identical = Caml_obj.caml_equal;
+var epsilon_identical = Caml_obj.caml_equal;
 
 function circle_circle_intersections(c1, c2) {
   var r2 = c2[1];
@@ -260,7 +260,7 @@ exports.$neg$caret = $neg$caret;
 exports.$star$caret = $star$caret;
 exports.$slash$caret = $slash$caret;
 exports.project = project;
-exports.is_identical = is_identical;
+exports.epsilon_identical = epsilon_identical;
 exports.distance = distance;
 exports.circle_circle_intersections = circle_circle_intersections;
 exports.circle_line_intersections = circle_line_intersections;

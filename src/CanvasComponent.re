@@ -72,29 +72,29 @@ let make = (_children) => {
         | ToolSelect(t) => 
             ReasonReact.Update({...state, selected_tool: t, tool_firstclick: None})
         | ClickCanvas(pt) => 
-            let pt = (0.,0.) /*get_snapped_mouse_pos(pt);*/
+            /* let pt = (0.,0.) get_snapped_mouse_pos(pt);*/
             switch (state.selected_tool) {
             | PointTool =>                     
                 let new_ghost = Ghost(Primitives.Point(pt))
-                let new_ghosts = apppend_ghost(new_ghost, state.ghosts);
+                let new_ghosts = append_ghost(new_ghost, state.ghosts);
                 ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
             | CircleTool =>
                 switch (state.tool_firstclick) {
                 | None => 
-                    ReasonReact.Update({...state, tool_firstclick: pt})
-                | Some(pt) => 
-                    let r = Euclidean.distance(pt, state.tool_firstclick)
-                    let new_ghost = Ghost(Primitives.Circle((state.tool_firstclick, r)))
-                    let new_ghosts = apppend_ghost(new_ghost, state.ghosts);
+                    ReasonReact.Update({...state, tool_firstclick: Some(pt)})
+                | Some(pt2) => 
+                    let r = Euclidean.distance(pt, pt2)
+                    let new_ghost = Ghost(Primitives.Circle((pt2, r)))
+                    let new_ghosts = append_ghost(new_ghost, state.ghosts);
                     ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
                 }
             | LineTool =>
                 switch (state.tool_firstclick) {
                     | None => 
-                        ReasonReact.Update({...state, tool_firstclick: pt})
-                    | Some(pt) => 
-                        let new_ghost = Ghost(Primitives.Line((state.tool_firstclick, pt)))
-                        let new_ghosts = apppend_ghost(new_ghost, state.ghosts);
+                        ReasonReact.Update({...state, tool_firstclick: Some(pt)})
+                    | Some(pt2) => 
+                        let new_ghost = Ghost(Primitives.Line((pt2, pt)))
+                        let new_ghosts = append_ghost(new_ghost, state.ghosts);
                         ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
                     }
             }
