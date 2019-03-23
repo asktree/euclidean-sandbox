@@ -36,3 +36,42 @@ let rec nearest_ghost = (~best = ?, pt : point, w : ghostWorld) =>
             nearest_ghost(~best = winner, pt, remaining)
         };
     };
+
+
+let rec ghosts_within = (~qualified = ?, pt : point, r : float, w : ghostWorld) => {
+    switch w {
+        | [] => qualified
+        | [g, ...remaining] => {
+            let (dst, pt) = Euclidean.nearest_point_on_primitive(pt, g);
+
+            if (dst <= r) {
+                ghosts_within(~qualified = [g, ...qualified], pt, r, remaining)
+            } else {
+                ghosts_within(~qualified = qualified, pt, r, remaining)
+            }
+        }
+    };
+};
+
+let snap_cursor = (pt : point, r : float, w : ghostWorld) => {
+    switch ghosts_within(pt, r, w) {
+        | None => pt 
+        | Some(primitives) => {
+            // NOT IMPLEMENTED
+            // I was trying to think of a functional way to do this
+            // but I think I should just write an imperative for loop
+            //type 
+            // let overlaps = fold_left(())
+
+            // let rec overlaps = > (~so_far = ?, to_test) => {
+            //     switch to_test {
+            //         | [] => so_far
+            //         | [p, ...remaining] => {
+            //             map(remaining)
+            //             overlaps(~so_far = Euclidean.find_intersections(p, q) @ so_far, 
+            //         }
+            //     }
+            }
+        } 
+    }
+};
