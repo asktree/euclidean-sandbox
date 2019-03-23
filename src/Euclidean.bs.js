@@ -18,8 +18,8 @@ function magnitude(a) {
 
 function perpify(a) {
   return /* tuple */[
-          -a[0],
-          a[1]
+          -a[1],
+          a[0]
         ];
 }
 
@@ -51,6 +51,10 @@ function $slash$caret(b, a) {
         ];
 }
 
+function det(a, b, c, d) {
+  return a * d - b * c;
+}
+
 function project(v, onto) {
   return $star$caret(dot(v, onto) / dot(onto, onto), onto);
 }
@@ -78,13 +82,14 @@ function circle_circle_intersections(c1, c2) {
           ];
   } else {
     var para = (centerDistance * centerDistance - r2 * r2 + r1 * r1) / (2.0 * centerDistance);
-    var perp = Math.sqrt((-centerDistance + r2 - r1) * (-centerDistance - r2 + r1) * (-centerDistance + r2 + r1) * (centerDistance + r2 + r1)) / centerDistance;
+    var a$1 = centerDistance * centerDistance - r2 * r2 + r1 * r1;
+    var perp = Math.sqrt(4.0 * (centerDistance * centerDistance) * (r1 * r1) - a$1 * a$1) / (2.0 * centerDistance);
     var paraVec = $slash$caret($neg$caret(center2, center1), centerDistance);
     var perpVec = perpify(paraVec);
     return /* :: */[
             $plus$caret($plus$caret($star$caret(para, paraVec), $star$caret(perp, perpVec)), center1),
             /* :: */[
-              $plus$caret($neg$caret($star$caret(para, paraVec), $star$caret(perp, perpVec)), center1),
+              $neg$caret($plus$caret($star$caret(para, paraVec), center1), $star$caret(perp, perpVec)),
               /* [] */0
             ]
           ];
@@ -99,17 +104,17 @@ function circle_line_intersections(c, l) {
   var para = Math.sqrt(dot(paraVec, paraVec));
   if (radius * radius > para * para) {
     var perp = Math.sqrt(radius * radius - para * para);
-    var perpVec = perpify(paraVec);
+    var perpVec = $slash$caret(perpify(paraVec), para);
     return /* :: */[
-            $plus$caret($plus$caret(paraVec, $star$caret(perp, perpVec)), l[0]),
+            $plus$caret($plus$caret($plus$caret(paraVec, $star$caret(perp, perpVec)), l[0]), center),
             /* :: */[
-              $plus$caret($neg$caret(paraVec, $star$caret(perp, perpVec)), l[0]),
+              $plus$caret($plus$caret($neg$caret(paraVec, $star$caret(perp, perpVec)), l[0]), center),
               /* [] */0
             ]
           ];
   } else if (radius * radius === para * para) {
     return /* :: */[
-            $plus$caret(paraVec, l[0]),
+            $plus$caret($plus$caret(paraVec, l[0]), center),
             /* [] */0
           ];
   } else {
@@ -131,16 +136,30 @@ function circle_point_intersections(c, p) {
 }
 
 function line_line_intersections(l1, l2) {
-  var vx = $neg$caret(l1[1], l1[0]);
-  var vy = $neg$caret(l2[1], l2[0]);
-  var dv = $neg$caret(vy, vx);
-  var dx = $neg$caret(l1[0], l2[0]);
-  var factor = dx[0] / dv[0];
-  if (factor * dv[1] - dx[1] > 0.01) {
+  var match = l2[1];
+  var y4 = match[1];
+  var x4 = match[0];
+  var match$1 = l2[0];
+  var y3 = match$1[1];
+  var x3 = match$1[0];
+  var match$2 = l1[1];
+  var y2 = match$2[1];
+  var x2 = match$2[0];
+  var match$3 = l1[0];
+  var y1 = match$3[1];
+  var x1 = match$3[0];
+  var x_num = det(det(x1, y1, x2, y2), det(x1, 1.0, x2, 1.0), det(x3, y3, x4, y4), det(x3, 1.0, x4, 1.0));
+  var x_den = det(det(x1, 1.0, x2, 1.0), det(y1, 1.0, y2, 1.0), det(x3, 1.0, x4, 1.0), det(y3, 1.0, y4, 1.0));
+  var y_num = det(det(x1, y1, x2, y2), det(y1, 1.0, y2, 1.0), det(x3, y3, x4, y4), det(y3, 1.0, y4, 1.0));
+  var y_den = det(det(x1, 1.0, x2, 1.0), det(y1, 1.0, y2, 1.0), det(x3, 1.0, x4, 1.0), det(y3, 1.0, y4, 1.0));
+  if (Math.abs(y_den) < 0.01 || Math.abs(x_den) < 0.01) {
     return /* [] */0;
   } else {
     return /* :: */[
-            $plus$caret(l1[0], $star$caret(factor, $neg$caret(l1[1], l1[0]))),
+            /* tuple */[
+              x_num / x_den,
+              y_num / y_den
+            ],
             /* [] */0
           ];
   }
@@ -262,9 +281,10 @@ exports.$plus$caret = $plus$caret;
 exports.$neg$caret = $neg$caret;
 exports.$star$caret = $star$caret;
 exports.$slash$caret = $slash$caret;
+exports.det = det;
 exports.project = project;
-exports.epsilon_identical = epsilon_identical;
 exports.distance = distance;
+exports.epsilon_identical = epsilon_identical;
 exports.circle_circle_intersections = circle_circle_intersections;
 exports.circle_line_intersections = circle_line_intersections;
 exports.circle_point_intersections = circle_point_intersections;
