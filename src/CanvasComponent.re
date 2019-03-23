@@ -49,7 +49,7 @@ type state = {
 
 type action =
   | ToolSelect(tool)
-  | ClickCanvas(Primitives.point)
+  | ClickCanvas((int, int))
   | MouseMove;
 
   
@@ -58,47 +58,63 @@ let component = ReasonReact.reducerComponent("Canvas");
 
 
 let make = (_children) => {
-    ...component,
+    let canvas_click = (e, self) => {
+        let pt = (ReactEvent.Mouse.clientX(e), ReactEvent.Mouse.clientY(e));
+        self.ReasonReact.send(ClickCanvas(pt));
+        ()
+    };
+    {
+        ...component,
 
-    initialState: () => {
-        ghosts: [],
-        selected_tool: CircleTool,
-        tool_firstclick: None,
-        hovered_ghost: None,
-    },
+        initialState: () => {
+            ghosts: [],
+            selected_tool: CircleTool,
+            tool_firstclick: None,
+            hovered_ghost: None,
+        },
 
-    reducer: (action, state) => {
-        switch (action) {
-        | ToolSelect(t) => 
-            ReasonReact.Update({...state, selected_tool: t, tool_firstclick: None})
-        | ClickCanvas(pt) => 
-            /* let pt = (0.,0.) get_snapped_mouse_pos(pt);*/
-            switch (state.selected_tool) {
-            | PointTool =>                     
-                let new_ghost = Ghost(Primitives.Point(pt))
-                let new_ghosts = append_ghost(new_ghost, state.ghosts);
-                ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
-            | CircleTool =>
-                switch (state.tool_firstclick) {
-                | None => 
-                    ReasonReact.Update({...state, tool_firstclick: Some(pt)})
-                | Some(pt2) => 
-                    let r = Euclidean.distance(pt, pt2)
-                    let new_ghost = Ghost(Primitives.Circle((pt2, r)))
+        reducer: (action, state) => {
+            switch (action) {
+            | ToolSelect(t) => 
+                ReasonReact.Update({...state, selected_tool: t, tool_firstclick: None})
+            | ClickCanvas(ipt) => 
+                let pt = (float_of_int(fst(ipt)), float_of_int(snd(ipt)))
+                let pt' = snap_cursor(pt, 5., state.ghosts);
+                switch (state.selected_tool) {
+                | PointTool =>                     
+                    let new_ghost = Ghost(Primitives.Point(pt'))
                     let new_ghosts = append_ghost(new_ghost, state.ghosts);
                     ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
-                }
-            | LineTool =>
-                switch (state.tool_firstclick) {
+                | CircleTool =>
+                    switch (state.tool_firstclick) {
                     | None => 
-                        ReasonReact.Update({...state, tool_firstclick: Some(pt)})
+                        ReasonReact.Update({...state, tool_firstclick: Some(pt')})
                     | Some(pt2) => 
-                        let new_ghost = Ghost(Primitives.Line((pt2, pt)))
+                        let r = Euclidean.distance(pt', pt2)
+                        let new_ghost = Ghost(Primitives.Circle((pt2, r)))
                         let new_ghosts = append_ghost(new_ghost, state.ghosts);
                         ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
                     }
+                | LineTool =>
+                    switch (state.tool_firstclick) {
+                        | None => 
+                            ReasonReact.Update({...state, tool_firstclick: Some(pt')})
+                        | Some(pt2) => 
+                            let new_ghost = Ghost(Primitives.Line((pt2, pt')))
+                            let new_ghosts = append_ghost(new_ghost, state.ghosts);
+                            ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
+                        }
+                }
+            | MouseMove => ReasonReact.Update(state)
             }
-        | MouseMove => ReasonReact.Update(state)
+        },
+
+        render: self => {
+            <div>
+                <svg onClick={self.handle(canvas_click)}>
+                    {draw_world(self.state.ghosts)}
+                </svg>
+            </div>
         }
-    },
+    };
 };

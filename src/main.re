@@ -151,6 +151,6 @@ let snap_cursor = (pt : point, r : float, w : ghostWorld) => {
         switch best {
         | None => failwith("something is wrong with snap_cursor");
         | Some(pt') => pt'
-        }
-    }
+        };
+    };
 };

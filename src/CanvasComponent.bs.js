@@ -3,6 +3,7 @@
 
 var $$Array = require("bs-platform/lib/js/array.js");
 var Block = require("bs-platform/lib/js/block.js");
+var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var ReactDOMRe = require("reason-react/src/ReactDOMRe.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
@@ -104,6 +105,16 @@ function draw_world(_$staropt$star, _w) {
 var component = ReasonReact.reducerComponent("Canvas");
 
 function make(_children) {
+  var canvas_click = function (e, self) {
+    var pt_000 = e.clientX;
+    var pt_001 = e.clientY;
+    var pt = /* tuple */[
+      pt_000,
+      pt_001
+    ];
+    Curry._1(self[/* send */3], /* ClickCanvas */Block.__(1, [pt]));
+    return /* () */0;
+  };
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
@@ -114,7 +125,11 @@ function make(_children) {
           /* willUnmount */component[/* willUnmount */6],
           /* willUpdate */component[/* willUpdate */7],
           /* shouldUpdate */component[/* shouldUpdate */8],
-          /* render */component[/* render */9],
+          /* render */(function (self) {
+              return React.createElement("div", undefined, React.createElement("svg", {
+                              onClick: Curry._1(self[/* handle */0], canvas_click)
+                            }, draw_world(undefined, self[/* state */1][/* ghosts */0])));
+            }),
           /* initialState */(function (param) {
               return /* record */[
                       /* ghosts : [] */0,
@@ -128,14 +143,21 @@ function make(_children) {
               if (typeof action === "number") {
                 return /* Update */Block.__(0, [state]);
               } else if (action.tag) {
-                var pt = action[0];
+                var ipt = action[0];
+                var pt_000 = ipt[0];
+                var pt_001 = ipt[1];
+                var pt = /* tuple */[
+                  pt_000,
+                  pt_001
+                ];
+                var pt$prime = Main$ReactTemplate.snap_cursor(pt, 5, state[/* ghosts */0]);
                 var match = state[/* selected_tool */1];
                 switch (match) {
                   case 0 : 
                       var match$1 = state[/* tool_firstclick */2];
                       if (match$1 !== undefined) {
                         var pt2 = match$1;
-                        var r = Euclidean$ReactTemplate.distance(pt, pt2);
+                        var r = Euclidean$ReactTemplate.distance(pt$prime, pt2);
                         var new_ghost = /* Ghost */[/* Circle */Block.__(1, [/* tuple */[
                                 pt2,
                                 r
@@ -151,7 +173,7 @@ function make(_children) {
                         return /* Update */Block.__(0, [/* record */[
                                     /* ghosts */state[/* ghosts */0],
                                     /* selected_tool */state[/* selected_tool */1],
-                                    /* tool_firstclick */pt,
+                                    /* tool_firstclick */pt$prime,
                                     /* hovered_ghost */state[/* hovered_ghost */3]
                                   ]]);
                       }
@@ -160,7 +182,7 @@ function make(_children) {
                       if (match$2 !== undefined) {
                         var new_ghost$1 = /* Ghost */[/* Line */Block.__(0, [/* tuple */[
                                 match$2,
-                                pt
+                                pt$prime
                               ]])];
                         var new_ghosts$1 = Main$ReactTemplate.append_ghost(new_ghost$1, state[/* ghosts */0]);
                         return /* Update */Block.__(0, [/* record */[
@@ -173,12 +195,12 @@ function make(_children) {
                         return /* Update */Block.__(0, [/* record */[
                                     /* ghosts */state[/* ghosts */0],
                                     /* selected_tool */state[/* selected_tool */1],
-                                    /* tool_firstclick */pt,
+                                    /* tool_firstclick */pt$prime,
                                     /* hovered_ghost */state[/* hovered_ghost */3]
                                   ]]);
                       }
                   case 2 : 
-                      var new_ghost$2 = /* Ghost */[/* Point */Block.__(2, [pt])];
+                      var new_ghost$2 = /* Ghost */[/* Point */Block.__(2, [pt$prime])];
                       var new_ghosts$2 = Main$ReactTemplate.append_ghost(new_ghost$2, state[/* ghosts */0]);
                       return /* Update */Block.__(0, [/* record */[
                                   /* ghosts */new_ghosts$2,
