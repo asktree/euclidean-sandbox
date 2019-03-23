@@ -52,18 +52,24 @@ let circle_line_intersections = (c : circle, l : line) => {
 
     let para = magnitude(paraVec);
 
-    if (sqr(radius) > sqr(para)) {
-        let perp = sqrt(sqr(radius) -. sqr(para));
+    if (para > epsilon) {
+        if (sqr(radius) > sqr(para)) {
+            let perp = sqrt(sqr(radius) -. sqr(para));
 
-        let perpVec = perpify(paraVec) /^ para;
+            let perpVec = perpify(paraVec) /^ para;
 
-        [paraVec +^ (perp *^ perpVec) +^ fst(l) +^ center, paraVec -^ (perp *^ perpVec) +^ fst(l) +^ center]
-    } else if (sqr(radius) == sqr(para)) {
+            [paraVec +^ (perp *^ perpVec) +^ fst(l) +^ center, paraVec -^ (perp *^ perpVec) +^ fst(l) +^ center]
+        } else if (sqr(radius) == sqr(para)) {
 
-        [paraVec +^ fst(l) +^ center]
+            [paraVec +^ fst(l) +^ center]
+        } else {
+
+            []
+        }
     } else {
+        let out = s /^ magnitude(s);
 
-        []
+        [fst(l) +^ center +^ (radius *^ out), fst(l) +^ center -^ (radius *^ out)]
     }
 };
 
