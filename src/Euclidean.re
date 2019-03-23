@@ -7,7 +7,8 @@ let epsilon = 0.01;
 let sqr = (a: float) => a *. a;
 let dot = (a: point, b: point) => (fst(a) *. fst(b)) +. (snd(a) *. snd(b));
 let magnitude = (a: point) => sqrt(dot(a, a));
-let perpify = (a: point) => (-.fst(a), snd(a)); 
+let perpify = (a: point) => (-.snd(a), fst(a)); 
+// let perpify_left = (a: point) => (fst(a), -.snd(a));
 let (+^) = (a: point, b: point) => (fst(a) +. fst(b), snd(a) +. snd(b));
 let (-^) = (a: point, b: point) => (fst(a) -. fst(b), snd(a) -. snd(b));
 let (*^) = (a: float, b: point) => (a *. fst(b), a *. snd(b));
@@ -31,17 +32,13 @@ let circle_circle_intersections = (c1 : circle, c2 : circle) => {
         [((r1 *^ (center2 -^ center1)) /^ centerDistance) +^ center1]
     } else {
         let para = (sqr(centerDistance) -. sqr(r2) +. sqr(r1))/.(2.0 *. centerDistance);
-        let perp = sqrt(
-            (-.centerDistance +. r2 -. r1) *. 
-            (-.centerDistance -. r2 +. r1) *.
-            (-.centerDistance +. r2 +. r1) *.
-            (centerDistance +. r2 +. r1)
-            )/.centerDistance;
+        let perp = sqrt((4.0 *. sqr(centerDistance) *. sqr(r1)) -. sqr(sqr(centerDistance) -. sqr(r2) +. sqr(r1))) /. (2.0 *. centerDistance);
 
         let paraVec = (center2 -^ center1) /^ centerDistance;
+
         let perpVec = perpify(paraVec);
 
-        [para *^ paraVec +^ perp *^ perpVec +^ center1, para *^ paraVec -^ perp *^ perpVec +^ center1]
+        [(para *^ paraVec) +^ (perp *^ perpVec) +^ center1, (para *^ paraVec) +^ center1 -^ (perp *^ perpVec)]
     }
 };
 
@@ -49,7 +46,7 @@ let circle_line_intersections = (c : circle, l : line) => {
     let (center, radius) = c;
     let center = center -^ fst(l);
     let s = snd(l) -^ fst(l);
-
+    //  -^ center
     let paraVec = project(center, s) -^ center;
 
     let para = magnitude(paraVec);
@@ -57,12 +54,14 @@ let circle_line_intersections = (c : circle, l : line) => {
     if (sqr(radius) > sqr(para)) {
         let perp = sqrt(sqr(radius) -. sqr(para));
 
-        let perpVec = perpify(paraVec);
+        let perpVec = perpify(paraVec) /^ para;
 
-        [paraVec +^ perp *^ perpVec +^ fst(l), paraVec -^ perp *^ perpVec +^ fst(l)]
+        [paraVec +^ (perp *^ perpVec) +^ fst(l) +^ center, paraVec -^ (perp *^ perpVec) +^ fst(l) +^ center]
     } else if (sqr(radius) == sqr(para)) {
-        [paraVec +^ fst(l)]
+
+        [paraVec +^ fst(l) +^ center]
     } else {
+
         []
     }
 };
