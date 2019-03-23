@@ -66,6 +66,7 @@ function draw_ghost(param) {
         return React.createElement("circle", {
                     cx: pt[0],
                     cy: pt[1],
+                    fill: "none",
                     r: match$1[1],
                     stroke: "black"
                   });
@@ -105,14 +106,16 @@ function draw_world(_$staropt$star, _w) {
 var component = ReasonReact.reducerComponent("Canvas");
 
 function make(_children) {
-  var canvas_click = function (e, self) {
+  var canvas_mousemove = function (e, self) {
+    var dim = ( 'e.getBoundingClientRect();' );
+    console.log(dim);
     var pt_000 = e.clientX;
     var pt_001 = e.clientY;
     var pt = /* tuple */[
       pt_000,
       pt_001
     ];
-    Curry._1(self[/* send */3], /* ClickCanvas */Block.__(1, [pt]));
+    Curry._1(self[/* send */3], /* MouseMove */Block.__(1, [pt]));
     return /* () */0;
   };
   return /* record */[
@@ -127,30 +130,37 @@ function make(_children) {
           /* shouldUpdate */component[/* shouldUpdate */8],
           /* render */(function (self) {
               return React.createElement("div", undefined, React.createElement("svg", {
-                              onClick: Curry._1(self[/* handle */0], canvas_click)
-                            }, draw_world(undefined, self[/* state */1][/* ghosts */0])));
+                              height: "1000",
+                              width: "1000",
+                              onClick: (function (_event) {
+                                  return Curry._1(self[/* send */3], /* ClickCanvas */0);
+                                }),
+                              onMouseMove: Curry._1(self[/* handle */0], canvas_mousemove)
+                            }, React.createElement("circle", {
+                                  cx: self[/* state */1][/* tool_pos */4][0].toString(),
+                                  cy: self[/* state */1][/* tool_pos */4][1].toString(),
+                                  fill: "red",
+                                  r: "3",
+                                  stroke: "red"
+                                }), draw_world(undefined, self[/* state */1][/* ghosts */0])));
             }),
           /* initialState */(function (param) {
               return /* record */[
                       /* ghosts : [] */0,
                       /* selected_tool : CircleTool */0,
                       /* tool_firstclick */undefined,
-                      /* hovered_ghost */undefined
+                      /* hovered_ghost */undefined,
+                      /* tool_pos : tuple */[
+                        0,
+                        0
+                      ]
                     ];
             }),
           /* retainedProps */component[/* retainedProps */11],
           /* reducer */(function (action, state) {
               if (typeof action === "number") {
-                return /* Update */Block.__(0, [state]);
-              } else if (action.tag) {
-                var ipt = action[0];
-                var pt_000 = ipt[0];
-                var pt_001 = ipt[1];
-                var pt = /* tuple */[
-                  pt_000,
-                  pt_001
-                ];
-                var pt$prime = Main$ReactTemplate.snap_cursor(pt, 5, state[/* ghosts */0]);
+                var pt = state[/* tool_pos */4];
+                var pt$prime = Main$ReactTemplate.snap_cursor(pt, 20, state[/* ghosts */0]);
                 var match = state[/* selected_tool */1];
                 switch (match) {
                   case 0 : 
@@ -167,14 +177,16 @@ function make(_children) {
                                     /* ghosts */new_ghosts,
                                     /* selected_tool */state[/* selected_tool */1],
                                     /* tool_firstclick */undefined,
-                                    /* hovered_ghost */state[/* hovered_ghost */3]
+                                    /* hovered_ghost */state[/* hovered_ghost */3],
+                                    /* tool_pos */state[/* tool_pos */4]
                                   ]]);
                       } else {
                         return /* Update */Block.__(0, [/* record */[
                                     /* ghosts */state[/* ghosts */0],
                                     /* selected_tool */state[/* selected_tool */1],
                                     /* tool_firstclick */pt$prime,
-                                    /* hovered_ghost */state[/* hovered_ghost */3]
+                                    /* hovered_ghost */state[/* hovered_ghost */3],
+                                    /* tool_pos */state[/* tool_pos */4]
                                   ]]);
                       }
                   case 1 : 
@@ -189,14 +201,16 @@ function make(_children) {
                                     /* ghosts */new_ghosts$1,
                                     /* selected_tool */state[/* selected_tool */1],
                                     /* tool_firstclick */undefined,
-                                    /* hovered_ghost */state[/* hovered_ghost */3]
+                                    /* hovered_ghost */state[/* hovered_ghost */3],
+                                    /* tool_pos */state[/* tool_pos */4]
                                   ]]);
                       } else {
                         return /* Update */Block.__(0, [/* record */[
                                     /* ghosts */state[/* ghosts */0],
                                     /* selected_tool */state[/* selected_tool */1],
                                     /* tool_firstclick */pt$prime,
-                                    /* hovered_ghost */state[/* hovered_ghost */3]
+                                    /* hovered_ghost */state[/* hovered_ghost */3],
+                                    /* tool_pos */state[/* tool_pos */4]
                                   ]]);
                       }
                   case 2 : 
@@ -206,16 +220,34 @@ function make(_children) {
                                   /* ghosts */new_ghosts$2,
                                   /* selected_tool */state[/* selected_tool */1],
                                   /* tool_firstclick */undefined,
-                                  /* hovered_ghost */state[/* hovered_ghost */3]
+                                  /* hovered_ghost */state[/* hovered_ghost */3],
+                                  /* tool_pos */state[/* tool_pos */4]
                                 ]]);
                   
                 }
+              } else if (action.tag) {
+                var ipt = action[0];
+                var pt_000 = ipt[0];
+                var pt_001 = ipt[1];
+                var pt$1 = /* tuple */[
+                  pt_000,
+                  pt_001
+                ];
+                var pt$prime$1 = Main$ReactTemplate.snap_cursor(pt$1, 10, state[/* ghosts */0]);
+                return /* Update */Block.__(0, [/* record */[
+                            /* ghosts */state[/* ghosts */0],
+                            /* selected_tool */state[/* selected_tool */1],
+                            /* tool_firstclick */state[/* tool_firstclick */2],
+                            /* hovered_ghost */state[/* hovered_ghost */3],
+                            /* tool_pos */pt$prime$1
+                          ]]);
               } else {
                 return /* Update */Block.__(0, [/* record */[
                             /* ghosts */state[/* ghosts */0],
                             /* selected_tool */action[0],
                             /* tool_firstclick */undefined,
-                            /* hovered_ghost */state[/* hovered_ghost */3]
+                            /* hovered_ghost */state[/* hovered_ghost */3],
+                            /* tool_pos */state[/* tool_pos */4]
                           ]]);
               }
             }),

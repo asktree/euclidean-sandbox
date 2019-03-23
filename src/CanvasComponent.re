@@ -19,7 +19,7 @@ let draw_ghost = (Ghost(pr)) => {
     let spr = stringify_primitive(pr);
     switch (spr) {
     | StringCircle((pt, r)) => 
-        <circle cx={fst(pt)} cy={snd(pt)} r={r} stroke="black"/>
+        <circle cx={fst(pt)} cy={snd(pt)} r={r} stroke="black" fill="none"/>
     | StringLine((p1, p2)) => 
         <line x1={fst(p1)} y1={snd(p1)} x2={fst(p2)} y2={snd(p2)} stroke="black"/>
     | StringPoint(pt) => 
@@ -45,12 +45,13 @@ type state = {
     selected_tool: tool,
     tool_firstclick: option(Primitives.point),
     hovered_ghost: option(ghost),
+    tool_pos: Primitives.point,
 };
 
 type action =
   | ToolSelect(tool)
-  | ClickCanvas((int, int))
-  | MouseMove;
+  | ClickCanvas
+  | MouseMove((int, int));
 
   
 let component = ReasonReact.reducerComponent("Canvas");
@@ -58,9 +59,11 @@ let component = ReasonReact.reducerComponent("Canvas");
 
 
 let make = (_children) => {
-    let canvas_click = (e, self) => {
+    let canvas_mousemove = (e, self) => {
+        let dim = [%bs.raw {| 'e.getBoundingClientRect();' |}]
+        Js.Console.log(dim);
         let pt = (ReactEvent.Mouse.clientX(e), ReactEvent.Mouse.clientY(e));
-        self.ReasonReact.send(ClickCanvas(pt));
+        self.ReasonReact.send(MouseMove(pt));
         ()
     };
     {
@@ -71,15 +74,16 @@ let make = (_children) => {
             selected_tool: CircleTool,
             tool_firstclick: None,
             hovered_ghost: None,
+            tool_pos: (0., 0.),
         },
 
         reducer: (action, state) => {
             switch (action) {
             | ToolSelect(t) => 
                 ReasonReact.Update({...state, selected_tool: t, tool_firstclick: None})
-            | ClickCanvas(ipt) => 
-                let pt = (float_of_int(fst(ipt)), float_of_int(snd(ipt)))
-                let pt' = snap_cursor(pt, 5., state.ghosts);
+            | ClickCanvas => 
+                let pt = state.tool_pos;
+                let pt' = snap_cursor(pt, 20., state.ghosts);
                 switch (state.selected_tool) {
                 | PointTool =>                     
                     let new_ghost = Ghost(Primitives.Point(pt'))
@@ -105,13 +109,23 @@ let make = (_children) => {
                             ReasonReact.Update({...state, tool_firstclick: None, ghosts: new_ghosts})
                         }
                 }
-            | MouseMove => ReasonReact.Update(state)
+            | MouseMove(ipt) => 
+                let pt = (float_of_int(fst(ipt)), float_of_int(snd(ipt)));
+                let pt' = snap_cursor(pt, 10., state.ghosts);
+                ReasonReact.Update({...state, tool_pos: pt'})
             }
         },
 
         render: self => {
             <div>
-                <svg onClick={self.handle(canvas_click)}>
+                <svg width="1000" height="1000" 
+                 onClick=(_event => self.send(ClickCanvas))
+                 onMouseMove={self.handle(canvas_mousemove)}>
+                    <circle 
+                        cx={Js.Float.toString(fst(self.state.tool_pos))}
+                        cy={Js.Float.toString(snd(self.state.tool_pos))}
+                        r="3" fill="red" stroke="red"
+                    />
                     {draw_world(self.state.ghosts)}
                 </svg>
             </div>

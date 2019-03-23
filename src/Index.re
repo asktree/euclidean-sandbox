@@ -1,2 +1,2 @@
 
-ReactDOMRe.renderToElementWithId(<Component2 greeting="Hello!" />, "index2");
+ReactDOMRe.renderToElementWithId(<CanvasComponent />, "index1");
