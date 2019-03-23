@@ -13,6 +13,7 @@ let (+^) = (a: point, b: point) => (fst(a) +. fst(b), snd(a) +. snd(b));
 let (-^) = (a: point, b: point) => (fst(a) -. fst(b), snd(a) -. snd(b));
 let (*^) = (a: float, b: point) => (a *. fst(b), a *. snd(b));
 let (/^) = (b: point, a: float) => (fst(b) /. a, snd(b) /. a)
+let det = (a: float, b: float, c: float, d: float) => (a *. d) -. (b *. c);
 let project = (v: point, onto: point) => (dot(v, onto) /. dot(onto, onto)) *^ onto;
 
 let distance = (p1, p2) => magnitude(p1 -^ p2);
@@ -78,19 +79,18 @@ let circle_point_intersections = (c : circle, p : point) => {
 };
 
 let line_line_intersections = (l1 : line, l2 : line) => {
-    let (dv, dx) = {
-        let vx = snd(l1) -^ fst(l1);
-        let vy = snd(l2) -^ fst(l2);
+    let ((x1, y1), (x2, y2)) = l1;
+    let ((x3, y3), (x4, y4)) = l2;
 
-        (vy -^ vx, fst(l1) -^ fst(l2))
-    };
+    let x_num = det(det(x1, y1, x2, y2), det(x1, 1.0, x2, 1.0), det(x3, y3, x4, y4), det(x3, 1.0, x4, 1.0));
+    let x_den = det(det(x1, 1.0, x2, 1.0), det(y1, 1.0, y2, 1.0), det(x3, 1.0, x4, 1.0), det(y3, 1.0, y4, 1.0));
+    let y_num = det(det(x1, y1, x2, y2), det(y1, 1.0, y2, 1.0), det(x3, y3, x4, y4), det(y3, 1.0, y4, 1.0));
+    let y_den = det(det(x1, 1.0, x2, 1.0), det(y1, 1.0, y2, 1.0), det(x3, 1.0, x4, 1.0), det(y3, 1.0, y4, 1.0));
 
-    let factor = fst(dx) /. fst(dv);
-
-    if (factor *. snd(dv) -. snd(dx) > epsilon) {
+    if ((abs_float(y_den) < epsilon) || (abs_float(x_den) < epsilon)) {
         []
     } else {
-        [fst(l1) +^ factor *^ (snd(l1) -^ fst(l1))]
+        [(x_num /. x_den, y_num /. y_den)]
     }
 };
 
