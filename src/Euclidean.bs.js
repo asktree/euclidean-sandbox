@@ -102,23 +102,34 @@ function circle_line_intersections(c, l) {
   var s = $neg$caret(l[1], l[0]);
   var paraVec = $neg$caret(project(center, s), center);
   var para = Math.sqrt(dot(paraVec, paraVec));
-  if (radius * radius > para * para) {
-    var perp = Math.sqrt(radius * radius - para * para);
-    var perpVec = $slash$caret(perpify(paraVec), para);
+  if (para > 0.01) {
+    if (radius * radius > para * para) {
+      var perp = Math.sqrt(radius * radius - para * para);
+      var perpVec = $slash$caret(perpify(paraVec), para);
+      return /* :: */[
+              $plus$caret($plus$caret($plus$caret(paraVec, $star$caret(perp, perpVec)), l[0]), center),
+              /* :: */[
+                $plus$caret($plus$caret($neg$caret(paraVec, $star$caret(perp, perpVec)), l[0]), center),
+                /* [] */0
+              ]
+            ];
+    } else if (radius * radius === para * para) {
+      return /* :: */[
+              $plus$caret($plus$caret(paraVec, l[0]), center),
+              /* [] */0
+            ];
+    } else {
+      return /* [] */0;
+    }
+  } else {
+    var out = $slash$caret(s, Math.sqrt(dot(s, s)));
     return /* :: */[
-            $plus$caret($plus$caret($plus$caret(paraVec, $star$caret(perp, perpVec)), l[0]), center),
+            $plus$caret($plus$caret(l[0], center), $star$caret(radius, out)),
             /* :: */[
-              $plus$caret($plus$caret($neg$caret(paraVec, $star$caret(perp, perpVec)), l[0]), center),
+              $neg$caret($plus$caret(l[0], center), $star$caret(radius, out)),
               /* [] */0
             ]
           ];
-  } else if (radius * radius === para * para) {
-    return /* :: */[
-            $plus$caret($plus$caret(paraVec, l[0]), center),
-            /* [] */0
-          ];
-  } else {
-    return /* [] */0;
   }
 }
 
