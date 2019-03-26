@@ -7,7 +7,7 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var ReactDOMRe = require("reason-react/src/ReactDOMRe.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
-var Main$ReactTemplate = require("./Main.bs.js");
+var Main$ReactTemplate = require("./main.bs.js");
 var Euclidean$ReactTemplate = require("./Euclidean.bs.js");
 
 function stringify_primitive(pr) {
@@ -54,7 +54,7 @@ function draw_ghost(param) {
         var p2 = match[1];
         var p1 = match[0];
         return React.createElement("line", {
-                    stroke: "black",
+                    className: "lineGhost",
                     x1: p1[0],
                     x2: p2[0],
                     y1: p1[1],
@@ -64,19 +64,18 @@ function draw_ghost(param) {
         var match$1 = spr[0];
         var pt = match$1[0];
         return React.createElement("circle", {
+                    className: "circleGhost",
                     cx: pt[0],
                     cy: pt[1],
-                    fill: "none",
-                    r: match$1[1],
-                    stroke: "black"
+                    r: match$1[1]
                   });
     case 2 : 
         var pt$1 = spr[0];
         return React.createElement("circle", {
+                    className: "pointGhost",
                     cx: pt$1[0],
                     cy: pt$1[1],
-                    fill: "black",
-                    r: "2"
+                    r: "3"
                   });
     
   }
@@ -136,15 +135,15 @@ function make(_children) {
                                 position: "absolute",
                                 top: "10px"
                               }
-                            }, React.createElement("div", {
+                            }, React.createElement("button", {
                                   onClick: (function (_event) {
                                       return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* CircleTool */0]));
                                     })
-                                }, " CIRCLE "), React.createElement("div", {
+                                }, " CIRCLE "), React.createElement("button", {
                                   onClick: (function (_event) {
                                       return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* LineTool */1]));
                                     })
-                                }, " LINE!! "), React.createElement("div", {
+                                }, " LINE!! "), React.createElement("button", {
                                   onClick: (function (_event) {
                                       return Curry._1(self[/* send */3], /* ToolSelect */Block.__(0, [/* PointTool */2]));
                                     })

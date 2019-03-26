@@ -4,8 +4,26 @@
     <style>
         html, body { margin:0; padding:0; overflow:hidden; height:100%; }
         svg { position:fixed; top:0; left: 0; height:100%; width:100%;}
-        #page #canvas { position:fixed; top:0; bottom:0; left:0; right:0; height:100%}
+        #page #canvas { position:fixed; top:0; bottom:0; left:0; right:0; height:100%; background-color: #eeeeee;}
         #tools {position: relative; z-index: 10;}
+
+        circle.circleGhost {
+          fill: None;
+          stroke: #555555 ;
+          stroke-dasharray: 5 2;
+          stroke-width: 1.5px;
+        }
+        circle.pointGhost {
+          fill: None;
+          stroke: #555555 ;
+          stroke-width: 1.5px;
+        }
+        line.lineGhost {
+          fill: None;
+          stroke: #555555 ;
+          stroke-dasharray: 5 2;
+          stroke-width: 1.5px;
+        }
       </style>
   <meta charset="UTF-8">
   <title>Euclidean Sandbox</title>

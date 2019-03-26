@@ -19,11 +19,11 @@ let draw_ghost = (Ghost(pr)) => {
     let spr = stringify_primitive(pr);
     switch (spr) {
     | StringCircle((pt, r)) => 
-        <circle cx={fst(pt)} cy={snd(pt)} r={r} stroke="black" fill="none"/>
+        <circle cx={fst(pt)} cy={snd(pt)} r={r} className="circleGhost"/>
     | StringLine((p1, p2)) => 
-        <line x1={fst(p1)} y1={snd(p1)} x2={fst(p2)} y2={snd(p2)} stroke="black"/>
+        <line x1={fst(p1)} y1={snd(p1)} x2={fst(p2)} y2={snd(p2)} className="lineGhost"/>
     | StringPoint(pt) => 
-        <circle cx={fst(pt)} cy={snd(pt)} r="2" fill="black"/>
+        <circle cx={fst(pt)} cy={snd(pt)} r="3" className="pointGhost"/>
     };
 };
 
@@ -119,15 +119,15 @@ let make = (_children) => {
                     style=(ReactDOMRe.Style.make(~position="absolute", 
                                                  ~top="10px",
                                                  ~left="10px", ()))>
-                    <div  onClick=(_event => self.send(ToolSelect(CircleTool)))>
+                    <button  onClick=(_event => self.send(ToolSelect(CircleTool)))>
                         {ReasonReact.string(" CIRCLE ")}
-                    </div>
-                    <div  onClick=(_event => self.send(ToolSelect(LineTool)))>
+                    </button>
+                    <button  onClick=(_event => self.send(ToolSelect(LineTool)))>
                         {ReasonReact.string(" LINE!! ")}
-                    </div>                    
-                    <div  onClick=(_event => self.send(ToolSelect(PointTool)))>
+                    </button>                    
+                    <button  onClick=(_event => self.send(ToolSelect(PointTool)))>
                         {ReasonReact.string(" POINMT ")}
-                    </div>
+                    </button>
                 </div>
                 <svg
                  onClick=(_event => self.send(ClickCanvas))
